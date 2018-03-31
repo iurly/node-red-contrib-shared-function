@@ -1,0 +1,27 @@
+{
+  "name": "node-red-contrib-shared-function",
+  "version": "0.0.1",
+  "description": "Share javascript code between function nodes.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iurly/node-red-contrib-shared-function.git"
+  },
+  "keywords": [
+    "node-red",
+    "node-red-contrib",
+    "contrib",
+    "function",
+    "development"
+  ],
+  "node-red": {
+    "nodes": {
+      "shared-function": "shared-function/shared-function.js"
+    }
+  },
+  "author": "Gerlando Falauto",
+  "license": "Apache",
+  "bugs": {
+    "url": "https://github.com/iurly/node-red-contrib-shared-function/issues"
+  },
+  "homepage": "https://github.com/iurly/node-red-contrib-shared-function"
+}
