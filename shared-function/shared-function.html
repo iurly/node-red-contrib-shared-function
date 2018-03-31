@@ -1,8 +1,102 @@
+<script type="text/javascript">
+    RED.nodes.registerType('shared-code',{
+        category: 'config',
+        defaults: {
+            name: {value:"library1",required:true},
+            func: {value:"function identity(a)\n{\n    return a;\n}"},
+        },
+        label: function() {
+            return this.name;
+        },
+        oneditprepare: function() {
+            var that = this;
+            this.editor = RED.editor.createEditor({
+                id: 'node-config-input-func-editor',
+                mode: 'ace/mode/javascript',
+                value: $("#node-config-input-func").val(),
+                globals: {
+                    msg:true,
+                    context:true,
+                    RED: true,
+                    util: true,
+                    flow: true,
+                    global: true,
+                    console: true,
+                    Buffer: true,
+                    setTimeout: true,
+                    clearTimeout: true,
+                    setInterval: true,
+                    clearInterval: true
+                }
+            });
+
+            RED.library.create({
+                url:"functions", // where to get the data from
+                type:"function", // the type of object the library is for
+                editor:this.editor, // the field name the main text body goes to
+                elementPrefix:"node-config-input-",
+                mode:"ace/mode/javascript",
+                fields:['name']
+            });
+            this.editor.focus();
+        },
+        oneditsave: function() {
+            var annot = this.editor.getSession().getAnnotations();
+            this.noerr = 0;
+            $("#node-config-input-noerr").val(0);
+            for (var k=0; k < annot.length; k++) {
+                //console.log(annot[k].type,":",annot[k].text, "on line", annot[k].row);
+                if (annot[k].type === "error") {
+                    $("#node-config-input-noerr").val(annot.length);
+                    this.noerr = annot.length;
+                }
+            }
+            console.log(this.editor.getValue());
+            $("#node-config-input-func").val(this.editor.getValue());
+            this.editor.destroy();
+            delete this.editor;
+        },
+        oneditcancel: function() {
+            this.editor.destroy();
+            delete this.editor;
+        },
+        oneditresize: function(size) {
+            var rows = $("#dialog-form>div:not(.node-text-editor-row)");
+            var height = $("#dialog-form").height();
+            for (var i=0; i<rows.size(); i++) {
+                height -= $(rows[i]).outerHeight(true);
+            }
+            var editorRow = $("#dialog-form>div.node-text-editor-row");
+            height -= (parseInt(editorRow.css("marginTop"))+parseInt(editorRow.css("marginBottom")));
+            $(".node-text-editor").css("height",height+"px");
+            this.editor.resize();
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="shared-code">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="icon-bookmark"></i> Library Name</label>
+        <input type="text" id="node-config-input-name">
+    </div>
+    <div class="form-row" style="margin-bottom: 0px;">
+        <label for="node-config-input-func"><i class="fa fa-wrench"></i> <span data-i18n="function.label.function"></span></label>
+        <input type="hidden" id="node-config-input-func" autofocus="autofocus">
+        <input type="hidden" id="node-config-input-noerr">
+    </div>
+    <div class="form-row node-text-editor-row">
+        <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-config-input-func-editor" ></div>
+    </div>
+</script>
 
 <script type="text/x-red" data-template-name="shared function">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
         <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sharedcode"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-sharedcode" data-i18n="[placeholder]common.label.name">
     </div>
     <div class="form-row" style="margin-bottom: 0px;">
         <label for="node-input-func"><i class="fa fa-wrench"></i> <span data-i18n="function.label.function"></span></label>
@@ -60,6 +154,7 @@
         category: 'function',
         defaults: {
             name: {value:""},
+            sharedcode: {value:"", type:"shared-code"},
             func: {value:"\nreturn msg;"},
             outputs: {value:1},
             noerr: {value:0,required:true,validate:function(v) { return ((!v) || (v === 0)) ? true : false; }}

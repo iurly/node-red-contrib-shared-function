@@ -58,6 +58,8 @@ module.exports = function(RED) {
         var node = this;
         this.name = n.name;
         this.func = n.func;
+        // Retrieve the config node
+        this.sharedcode = RED.nodes.getNode(n.sharedcode);
         var functionText = "var results = null;"+
                            "results = (function(msg){ "+
                               "var __msgid__ = msg._msgid;"+
@@ -69,6 +71,7 @@ module.exports = function(RED) {
                                  "status:__node__.status,"+
                                  "send:function(msgs){ __node__.send(__msgid__,msgs);}"+
                               "};\n"+
+                              this.sharedcode.func+"\n"+
                               this.func+"\n"+
                            "})(msg);";
         this.topic = n.topic;
@@ -253,4 +256,14 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType("shared function",SharedFunctionNode);
     RED.library.register("functions");
+
+
+    function SharedCodeNode(n) {
+        RED.nodes.createNode(this,n);
+        this.name = n.name;
+        this.func = n.func;
+    }
+    RED.nodes.registerType("shared-code",SharedCodeNode);
+    //RED.library.register("libfunctions");
+
 }
