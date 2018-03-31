@@ -53,7 +53,7 @@ module.exports = function(RED) {
         }
     }
 
-    function FunctionNode(n) {
+    function SharedFunctionNode(n) {
         RED.nodes.createNode(this,n);
         var node = this;
         this.name = n.name;
@@ -251,6 +251,6 @@ module.exports = function(RED) {
             this.error(err);
         }
     }
-    RED.nodes.registerType("function",FunctionNode);
+    RED.nodes.registerType("shared function",SharedFunctionNode);
     RED.library.register("functions");
 }

@@ -1,5 +1,5 @@
 
-<script type="text/x-red" data-template-name="function">
+<script type="text/x-red" data-template-name="shared function">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
         <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
@@ -19,7 +19,7 @@
     <div class="form-tips"><span data-i18n="function.tip"></span></div>
 </script>
 
-<script type="text/x-red" data-help-name="function">
+<script type="text/x-red" data-help-name="shared function">
     <p>A JavaScript function block to run against the messages being received by the node.</p>
     <p>The messages are passed in as a JavaScript object called <code>msg</code>.</p>
     <p>By convention it will have a <code>msg.payload</code> property containing
@@ -55,7 +55,7 @@
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('function',{
+    RED.nodes.registerType('shared function',{
         color:"#fdd0a2",
         category: 'function',
         defaults: {
